@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ccms
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ccms}
+    username: ${DB_USERNAME:ccms}
+    password: ${DB_PASSWORD:ccms}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api
+
+ccms:
+  jwt:
+    issuer: ccms
+    secret: ${JWT_SECRET:change-me-to-a-strong-256-bit-secret-for-prod}
+    expires-minutes: ${JWT_EXPIRES_MINUTES:60}
+  integrations:
+    cbs-url: ${CBS_URL:http://localhost:9001/cbs}
+    ssbp-url: ${SSBP_URL:http://localhost:9002/ssbp}
+    sms-url: ${SMS_URL:http://localhost:9003/sms}
+    svboii-url: ${SVBOII_URL:http://localhost:9004/svboii}
+

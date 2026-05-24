@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: ccms-postgres
+    environment:
+      POSTGRES_DB: ccms
+      POSTGRES_USER: ccms
+      POSTGRES_PASSWORD: ccms
+    ports:
+      - "5432:5432"
+    volumes:
+      - ccms-postgres:/var/lib/postgresql/data
+      - ../database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ../database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+
+  backend:
+    build:
+      context: ../backend
+    container_name: ccms-backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/ccms
+      DB_USERNAME: ccms
+      DB_PASSWORD: ccms
+      JWT_SECRET: change-this-in-production
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ../frontend
+    container_name: ccms-frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  ccms-postgres:
+
